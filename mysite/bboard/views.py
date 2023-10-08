@@ -1,14 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
+from django.template import loader
 
 from .models import Bboard
 
 
 def index(request: HttpRequest):
-    title = 'Список объявлений\r\n\r\n\r\n'
-
-    data = [title]
-    for bb in Bboard.objects.order_by('-published'):
-        data.append(f'{bb.title}\r\n{bb.content}\r\n\r\n')
-    return HttpResponse(''.join(data), content_type='text/plain; charset=utf-8')
-
+    template = loader.get_template('bboard/index.html')
+    bbs = Bboard.objects.order_by('-published')
+    context = {'bbs': bbs}
+    return HttpResponse(template.render(context, request))
