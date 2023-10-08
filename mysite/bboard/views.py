@@ -1,12 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
-from django.template import loader
 
 from .models import Bboard
 
 
-def index(request: HttpRequest):
-    template = loader.get_template('bboard/index.html')
+def index(request: HttpRequest) -> HttpResponse:
     bbs = Bboard.objects.order_by('-published')
-    context = {'bbs': bbs}
-    return HttpResponse(template.render(context, request))
+    return render(request, 'bboard/index.html', {'bbs': bbs})
